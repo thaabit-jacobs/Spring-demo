@@ -1,7 +1,11 @@
-package tacos;
+package tacos.models;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 
 //lOMBOK GENERATES GETTERS AND SETTERS AS WELL AS CONSRUCTOR FOR VARIABLE FIELDS
 @Data
@@ -14,4 +18,6 @@ public class Ingredient {
     public static enum Type{
         WRAP, PROTEIN, VEGGIES, CHEESE, SAUCE
     }
+
+
 }
