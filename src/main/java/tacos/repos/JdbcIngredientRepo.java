@@ -20,7 +20,7 @@ public class JdbcIngredientRepo implements IngredientRepo
     }
 
     @Override
-    public Ingredient findOne(int id) {
+    public Ingredient findOne(String id) {
         return jdbc.queryForObject(
                 "select id, name, type from Ingredient where id=?",
                 this::mapRowToIngredient, id);

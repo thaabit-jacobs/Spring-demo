@@ -3,8 +3,8 @@ package tacos.web;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
+import tacos.models.Order;
 import tacos.models.Taco;
 import tacos.models.Ingredient;
 import tacos.models.Ingredient.Type;
@@ -12,9 +12,8 @@ import tacos.models.Ingredient.Type;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import tacos.repos.IngredientRepo;
+import tacos.repos.TacoRepo;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -30,11 +29,14 @@ import java.util.stream.Collectors;
 public class DesignTacoController {
 
     private final IngredientRepo ingredientRepo;
+    private final TacoRepo tacoRepo;
 
     @Autowired
-    public DesignTacoController(IngredientRepo ingredientRepo){
+    public DesignTacoController(IngredientRepo ingredientRepo,TacoRepo tacoRepo){
         this.ingredientRepo = ingredientRepo;
+        this.tacoRepo = tacoRepo;
     }
+
     @GetMapping
     public String showDEsignForm(Model model){
         List<Ingredient> ingredients = new ArrayList<>();
@@ -60,8 +62,18 @@ public class DesignTacoController {
         return filteredList;
     }
 
+    @ModelAttribute(name = "order")
+    public Order order(){
+        return new Order();
+    }
+
+    @ModelAttribute(name = "taco")
+    public Taco taco(){
+        return new Taco();
+    }
+
     @PostMapping
-    public String processDesign(@Valid Taco taco, Errors errors){
+    public String processDesign(@Valid Taco taco, Errors errors, @ModelAttribute Order order){
 
         if(errors.hasErrors()){
             System.out.println("Errors ");
@@ -70,18 +82,16 @@ public class DesignTacoController {
 
         log.info("Process design: " + taco);
 
+        Taco saved = tacoRepo.save(taco);
+
+        log.info("saved design: " + saved);
+        log.info("Current order: " + order);
+
+        order.addTaco(saved);
+
         return "redirect:/orders/current";
     }
 }
 
 
-/*                new Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
-                new Ingredient("COTO", "Corn Tortilla", Ingredient.Type.WRAP),
-                new Ingredient("GRBF", "Ground Beef", Ingredient.Type.PROTEIN),
-                new Ingredient("CARN", "Carnitas", Ingredient.Type.PROTEIN),
-                new Ingredient("TMTO", "Diced Tomatoes", Ingredient.Type.VEGGIES),
-                new Ingredient("LETC", "Lettuce", Ingredient.Type.VEGGIES),
-                new Ingredient("CHED", "Cheddar", Ingredient.Type.CHEESE),
-                new Ingredient("JACK", "Monterrey Jack", Ingredient.Type.CHEESE),
-                new Ingredient("SLSA", "Salsa", Ingredient.Type.SAUCE),
-                new Ingredient("SRCR", "Sour Cream", Ingredient.Type.SAUCE)*/
+

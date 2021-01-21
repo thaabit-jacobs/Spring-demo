@@ -1,6 +1,8 @@
 package tacos.models;
 
 import lombok.Data;
+import tacos.repos.JdbcIngredientRepo;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -18,7 +20,5 @@ public class Taco {
     private List<String> ingredients;
 
     private Date createdAt;
-    
-
 
 }

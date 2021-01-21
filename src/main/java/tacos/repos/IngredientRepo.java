@@ -7,7 +7,7 @@ import java.util.List;
 public interface IngredientRepo {
     public Ingredient save(Ingredient ingredient);
 
-    public Ingredient findOne(int id);
+    public Ingredient findOne(String id);
 
     public Iterable<Ingredient> findAll();
 }
